@@ -1,5 +1,6 @@
 # Projet_Tutore_M1SP
-Projet Tutoré - Master 1 Santé Publique 2023/2024
+
+*Projet Tutoré - Master 1 Santé Publique 2023/2024*
 
 ## Sujet 11 : Evaluation de la pertinence de méthodes de sélection de covariables.
 
