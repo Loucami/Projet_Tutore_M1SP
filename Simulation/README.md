@@ -5,20 +5,20 @@ Ici sont présents les différents codes permettant la simluation de jeux de don
 
 ## Changements au 20 février 2024
 
-#### Changer de plot ?
-On prend le meilleur lambda donc le plot des coefs n'affiche rien, puisque la pénalité est unique. 
+#### Regarder pour un dépot github
+Nous avons créé le repository complet. 
 
 #### Dimension des données dans le cas du Lasso 
-On a scale les données pour le Lasso.
+Nous avons *scale* les données pour le Lasso.
 
-#### Peut être plus pratique d'avoir une fonction qui fasse tout les tests en même temps ? 
-On a crée Méthode_Eval_Auto() qui lancent automatiquement tout les tests.
+#### Fonction automatique 
+Nous avons crée *Méthode_Eval_Auto()* qui lance automatiquement tout les tests.
+
+#### Meilleur plot ? 
+Nous avons ajouté le plot illustrant l'évolution des coefficients en fonction de la pénalité. **Comment l'interpréter ?**
 
 #### Regarder d'autres méthodes 
-On a rajouté la méthode de StepAIC (package MASS).
-
-#### Regarder pour un dépot github
-On a créé le repository complet. 
+Nous avons rajouté la méthode de StepAIC (package MASS). **Malheureusement elle ne fonctionne pas dans *Simulation()***
 
 #### Sortie : liste des covariables récupérées (essayer avec 200 covariables)
 Pour des questions de lisibilités nous avons gardé la version complète pour le moment. À rajouter dans la fonction finale !

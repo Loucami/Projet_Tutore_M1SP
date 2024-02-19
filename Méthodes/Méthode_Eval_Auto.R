@@ -1,6 +1,7 @@
 # Chargement du package glmnet
 library(glmnet)
 library(ncvreg)
+library(MASS)
 
 # Génération d'une simulation / Importation d'une simulation
 data("QuickStartExample")
