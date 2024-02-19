@@ -16,7 +16,6 @@ Nous avons crée *Méthode_Eval_Auto()* qui lance automatiquement tout les tests
 
 #### 4. Meilleur plot ? 
 Nous avons ajouté le plot illustrant l'évolution des coefficients en fonction de la pénalité. 
-<span style="color:red;"> Ce texte sera en rouge </span>
 **Comment l'interpréter ?**
 
 #### 5. Regarder d'autres méthodes 
