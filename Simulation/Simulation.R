@@ -1,7 +1,11 @@
-# Chargement du package glmnet
+
 library(glmnet)
 library(ncvreg)
 library(MASS)
+
+
+### ------------------------  Méthodes d'évaluation  ----------------------- ###
+
 
 eval_methode_auto <- function(xdata, ydata, folds) {
   
@@ -111,34 +115,32 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   print(liste_vars_aic)
 }
 
+
+### -----------------------------  Simulation  ----------------------------- ###
+
+
 simulation <- function(N,n,P) {
   
-  # X
+  # On crée X
   mu <- rnorm(n)
   sigma2_X <- rexp(n, 1)
   X <- matrix(data = NA, nrow = N, ncol = n)
-  for (i in 1:n) {
-    X[,i] <- rnorm(N, mu[i], sigma2_X[i])
-  }
-  #print(X[,1])
+  for (i in 1:n) { X[,i] <- rnorm(N, mu[i], sigma2_X[i]) }
   
-  # ß
+  # On crée ß
   ß_P <- rnorm(P,0,1)
   ß_N <- numeric(n-P)
   ß <- c(ß_P, ß_N)
-  #print(ß)
   
-  # e
+  # On crée e
   sigma2_e <- 0.10
   e <- rnorm(N, 0, sigma2_e)
-  #print(e)
   
-  # Y
+  # On crée Y
   Y <- X %*% ß + e
-  #print(Y)
   
   resultat <- eval_methode_auto(X, Y, 5)
   return(resultat)
 }
 
-simulation(30,500,30)
+simulation(100,50,20)

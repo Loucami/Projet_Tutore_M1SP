@@ -108,19 +108,3 @@ eval_methode(X, y, 5, 'MCP')
 eval_methode(X, y, 5, 'SCAD')
 eval_methode(X, y, 5, 'STEPAIC')
 
-
-
-
-### CHANGEMENTS ###
-
-#1 Changer de plot => Comme on prend le meilleur lambda le plot des coefs n'affiche rien, puisque la pénalité est unique
-
-#2 Hypothèse pour le Lasso : Scale(X) (=> Normaliser X) => Rajouté
-
-#3 Peut être lancer les trois plutot que de choisir => Méthode_Eval_Auto 
-
-#4 Regarder d'autres méthodes (Step-AIC package MASS) => Rajouté 
-
-# Regarder pour un dépot github (lien ent)
-
-# Sortie : liste des covariables récupérées (essayer avec 200 covariables)
