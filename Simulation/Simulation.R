@@ -139,16 +139,3 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
 resultat <- resultat_simulation(100, 30, 20, 100)
 
 
-
-# Notes réunion Simulation()
-# 100 simulation(), où sigma2_e, les paramètres de X, et C, sont choisis en amont.
-# Pour chaque simulation, on crée N individus => Xi, ei
-# -> Regarder mvtnorm pour tirer directement une matrice gaussienne
-# Simulation => Juste simulation
-# Resultat() ensuite 
-# return(list(blabla=blabla))
-# Regarder les scores de tests 
-# 100/200, 100/500, 100/1000.
-# Idéalement, les 200 premières covariables des 500 (ou des 1000) sont les mêmes que celles présentent dans la simulation de 200.
-# Penser à mettre une partie Implémentation (Version de R utilisé, packages particuliers utilisés, github)
-# Regarder les templates Overleaf 
