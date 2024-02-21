@@ -131,6 +131,7 @@ eval_methode_auto <- function(xdata, ydata, folds) {
 }
 
 
+
 ### -----------------------------  Simulation  ----------------------------- ###
 
 
@@ -164,11 +165,32 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
     res[[r]] <- list(X = X, Y = Y)
   }
   
-  return(res[[1]]$Y)
+  return(res)
 }
 
-simulation(100,50,20,10)
+#simulation(100,50,20,10)
 
+
+
+### -----------------------------  Resultat  ----------------------------- ###
+
+
+resultat <- function(Nb, Cov, Pos_Cov, Rep) {
+  
+  # Création des jeux de données 
+  données <- simulation(Nb, Cov, Pos_Cov, Rep)
+  
+  # Évaluation par les quatre méthodes
+  for (i in 1:Rep) {
+    xdata <- données[[i]]$X
+    ydata <- données[[i]]$Y
+    covs <- eval_methode_auto(xdata, ydata, 5)
+    
+    resultat <- rbind(resultat, covs)
+  }
+  
+  return(list(res = resultat, data = données))
+}
 
 
 #Simulation 
