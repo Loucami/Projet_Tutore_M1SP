@@ -25,7 +25,7 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   
   ## Coefficients sélectionnées
   ß_lasso <- coef(fit, s = cvfit_lasso$lambda.min)
-  covs_lasso <- ifelse(!is.na(ß_lasso[-1]) & ß_lasso[-1]!=0, 1, 0)
+  covs_lasso <- ifelse(ß_lasso[-1]!=is.na(ß_lasso[-1]) & ß_lasso[-1]!=0, 1, 0)
   
   ### ------ SCAD ------ ###
   
@@ -39,7 +39,7 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   
   # Coefficients sélectionnées
   ß_scad <- coef(cvfit_scad)
-  covs_scad <- ifelse(!is.na(ß_lasso[-1]) & ß_scad[-1]!=0, 1, 0)
+  covs_scad <- ifelse(ß_scad[-1]!=is.na(ß_scad[-1]) & ß_scad[-1]!=0, 1, 0)
   
   ### ------  MCP  ------ ###
   
@@ -53,7 +53,7 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   
   ## Coefficients sélectionnées
   ß_mcp <- coef(cvfit_mcp)
-  covs_mcp <- ifelse(!is.na(ß_lasso[-1]) & ß_mcp[-1]!=0, 1, 0)
+  covs_mcp <- ifelse(ß_mcp[-1]!=is.na(ß_mcp[-1]) & ß_mcp[-1]!=0, 1, 0)
   
   ### ------  STEPAIC  ------ ###
   
@@ -67,18 +67,16 @@ eval_methode_auto <- function(xdata, ydata, folds) {
 
   ## Coefficients sélectionnées
   ß_step <- coef(model_step)
-  print(ß_step)
-  covs_step <- ifelse(!is.na(ß_lasso[-1]) & ß_step[-1]!=0, 1, 0)
+  cols_select <- gsub("`", "", names(ß_step[-1]))
+  cols <- names(l_data[-1])
+  covs_step <- rep(0, length(cols))
+  covs_step[match(cols_select, cols)] <- ß_step[-1]
+  covs_step <- ifelse(covs_step!=is.na(covs_step) & covs_step!=0, 1, 0)
 
   return(rbind(covs_lasso, covs_scad, covs_mcp, covs_step))
   #return(list(lasso = covs_lasso, scad = covs_scad, mcp = covs_mcp, stepAIC = covs_step))
 }
 
-data("QuickStartExample")
-X <- QuickStartExample$x
-y <- QuickStartExample$y
-
-eval_methode_auto(X,y,5)
 
 ### -----------------------------  Simulation  ----------------------------- ###
 
@@ -120,10 +118,11 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
 ### ------------------------------  Résultat  ------------------------------ ###
 
 
-resultat <- function(Nb, Cov, Pos_Cov, Rep) {
+resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   
   # Création des jeux de données 
   données <- simulation(Nb, Cov, Pos_Cov, Rep)
+  resultat <- numeric(Cov)
   
   # Évaluation par les quatre méthodes
   for (i in 1:Rep) {
@@ -134,11 +133,14 @@ resultat <- function(Nb, Cov, Pos_Cov, Rep) {
     resultat <- rbind(resultat, covs)
   }
   
-  return(list(res = resultat, data = données))
+  return(list(res = resultat[-1,], data = données))
 }
 
+resultat <- resultat_simulation(100, 30, 20, 10)
 
-#Simulation 
+
+
+# Notes réunion Simulation()
 # 100 simulation(), où sigma2_e, les paramètres de X, et C, sont choisis en amont.
 # Pour chaque simulation, on crée N individus => Xi, ei
 # -> Regarder mvtnorm pour tirer directement une matrice gaussienne
