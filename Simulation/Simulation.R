@@ -99,61 +99,87 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   # Variables sélectionnées
   vars_mcp <- predict(cvfit_mcp, type = "vars")
   list_vars_mcp <- paste("Variables séletcionnées :", paste(vars_mcp, collapse = ", "))
-  #print(list_vars_mcp)
+  print(list_vars_mcp)
   
-  # ### ------  STEPAIC  ------ ###
-  # 
-  # print('--------  STEPAIC  --------')
-  # 
-  # ## Ajustement du modèle SCAD avec validation croisée
-  # data_stepAIC <- as.data.frame(cbind(xdata, ydata))
-  # last_col <- colnames(data_stepAIC[ncol(data_stepAIC)])
-  # modele <- lm(paste(last_col, " ~ .", sep = ""), data = data_stepAIC)
-  # invisible(capture.output(fit_aic <- stepAIC(modele, direction = "both")))
-  # 
-  # ## Prédiction des coefficients
-  # y_pred_aic <- predict(fit_aic) 
-  # ß_pred_aic <- coef(fit_aic)
-  # 
-  # ## Affichage des résultats
-  # # Nombre de variables sélectionnées 
-  # nb_vars_aic <- length(ß_pred_aic[-1])
-  # number_vars_aic <- paste('Nombre de covariable sélectionnées :', nb_vars_aic)
-  # print(number_vars_aic)
-  # 
-  # # Variables sélectionnées 
-  # vars_aic <- which(ß_pred_aic[-1]!=0)
-  # liste_vars_aic <- paste('Liste des covariables sélectionnées :', paste(vars_aic, collapse = ", "))
-  # print(liste_vars_aic)
-  
+  ### ------  STEPAIC  ------ ###
+
+  print('--------  STEPAIC  --------')
+
+  ## Ajustement du modèle SCAD avec validation croisée
+  l_data <- cbind.data.frame(ydata, xdata)
+  f.sat <- as.formula('ydata ~ .')
+  model.sat <- lm(f.sat, data = l_data)
+  f.cst <- as.formula('y ~ 1')
+  model.cst <- lm(f.cst, data = l_data)
+  model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
+
+  ## Prédiction des coefficients
+  y_pred_aic <- predict(model_step)
+  ß_pred_aic <- coef(model_step)
+
+  ## Affichage des résultats
+  # Nombre de variables sélectionnées
+  nb_vars_aic <- length(ß_pred_aic[-1])
+  number_vars_aic <- paste('Nombre de covariable sélectionnées :', nb_vars_aic)
+  print(number_vars_aic)
+
+  # Variables sélectionnées
+  vars_aic <- which(ß_pred_aic[-1]!=0)
+  liste_vars_aic <- paste('Liste des covariables sélectionnées :', paste(vars_aic, collapse = ", "))
+  #print(liste_vars_aic)
+
 }
 
 
 ### -----------------------------  Simulation  ----------------------------- ###
 
 
-simulation <- function(N,n,P) {
+simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   
-  # On crée X
-  mu <- rnorm(n)
-  sigma2_X <- rexp(n, 1)
-  X <- matrix(data = NA, nrow = N, ncol = n)
-  for (i in 1:n) { X[,i] <- rnorm(N, mu[i], sigma2_X[i]) }
+  # Paramètres pour X
+  mu <- rnorm(Cov)
+  sigma2_X <- rexp(Cov, 2) #Le 2 est arbitraire
   
-  # On crée ß
-  ß_P <- rnorm(P,0,1)
-  ß_N <- numeric(n-P)
+  # Paramètres pour ß
+  ß_P <- rnorm(Pos_Cov, 0, 2)
+  ß_N <- numeric(Cov-Pos_Cov)
   ß <- c(ß_P, ß_N)
   
-  # On crée e
+  # Paramètre pour e
   sigma2_e <- 0.10
-  e <- rnorm(N, 0, sigma2_e)
   
-  # On crée Y
-  Y <- X %*% ß + e
+  res = list()
   
-  resultat <- eval_methode_auto(X, Y, 5)
-  return(resultat)
+  for (r in 1:Rep) {
+    # On crée X
+    X <- matrix(data = NA, nrow = Nb, ncol = Cov)
+    for (i in 1:Cov) { X[,i] <- rnorm(Nb, mu[i], sigma2_X[i]) } 
+    
+    # On crée e
+    e <- rnorm(Nb, 0, sigma2_e)
+    
+    # On crée Y
+    Y <- X %*% ß + e
+    
+    res[[r]] <- list(X = X, Y = Y)
+  }
+  
+  return(res[[1]]$Y)
 }
 
-simulation(100,50,20)
+simulation(100,50,20,10)
+
+
+
+#Simulation 
+# 100 simulation(), où sigma2_e, les paramètres de X, et C, sont choisis en amont.
+# Pour chaque simulation, on crée N individus => Xi, ei
+# -> Regarder mvtnorm pour tirer directement une matrice gaussienne
+# Simulation => Juste simulation
+# Resultat() ensuite 
+# return(list(blabla=blabla))
+# Regarder les scores de tests 
+# 100/200, 100/500, 100/1000.
+# Idéalement, les 200 premières covariables des 500 (ou des 1000) sont les mêmes que celles présentent dans la simulation de 200.
+# Penser à mettre une partie Implémentation (Version de R utilisé, packages particuliers utilisés, github)
+# Regarder les templates Overleaf 
