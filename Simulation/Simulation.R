@@ -137,5 +137,5 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
 }
 
 resultat <- resultat_simulation(100, 30, 20, 10)
-resultat
+
 
