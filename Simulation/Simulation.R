@@ -2,6 +2,7 @@
 library(glmnet)
 library(ncvreg)
 library(MASS)
+library(splus2R)
 
 
 ### ------------------------  Méthodes d'évaluation  ----------------------- ###
@@ -99,8 +100,7 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   
   for (r in 1:Rep) {
     # On crée X
-    X <- matrix(data = NA, nrow = Nb, ncol = Cov)
-    for (i in 1:Cov) { X[,i] <- rnorm(Nb, mu[i], sigma2_X[i]) } 
+    X <- rmvnorm(Nb, mean = mu, sd = sqrt(sigma2_X))
     
     # On crée e
     e <- rnorm(Nb, 0, sigma2_e)
@@ -136,6 +136,6 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   return(list(res = resultat[-1,], data = données))
 }
 
-resultat <- resultat_simulation(100, 30, 20, 100)
-
+resultat <- resultat_simulation(100, 30, 20, 10)
+resultat
 
