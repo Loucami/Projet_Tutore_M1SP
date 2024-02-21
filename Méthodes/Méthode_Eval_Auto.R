@@ -17,9 +17,13 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   ### ------ LASSO ------ ###
   
   print('--------  LASSO  --------')
-    
+  
   ## Normalisation de X
   xdata_scale <- scale(xdata)
+  
+  ## Modèle d'origine et plot
+  fit <- glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
+  plot(fit)
   
   ## Ajustement du modèle LASSO avec validation croisée
   cvfit_lasso <- cv.glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
@@ -96,13 +100,16 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   print('--------  STEPAIC  --------')
   
   ## Ajustement du modèle SCAD avec validation croisée
-  data_stepAIC <- as.data.frame(cbind(xdata, ydata))
-  modele <- lm(V21 ~ ., data = data_stepAIC)
-  invisible(capture.output(fit_aic <- stepAIC(modele, direction = "both")))
+  l_data <- cbind.data.frame(ydata, xdata)
+  f.sat <- as.formula('ydata ~ .')
+  model.sat <- lm(f.sat, data = l_data)
+  f.cst <- as.formula('y ~ 1')
+  model.cst <- lm(f.cst, data = l_data)
+  model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
   
   ## Prédiction des coefficients
-  y_pred_aic <- predict(fit_aic) 
-  ß_pred_aic <- coef(fit_aic)
+  y_pred_aic <- predict(model_step) 
+  ß_pred_aic <- coef(model_step)
   
   ## Affichage des résultats
   # Nombre de variables sélectionnées 

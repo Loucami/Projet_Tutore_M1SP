@@ -8,13 +8,8 @@ library(MASS)
 
 
 eval_methode_auto <- function(xdata, ydata, folds) {
-  
-  info <- paste("Nombre d'enregistrements :", nrow(xdata), "; Nombre de covariables :", ncol(xdata))
-  print(info)
-  
+
   ### ------ LASSO ------ ###
-  
-  print('--------  LASSO  --------')
   
   ## Normalisation de X
   xdata_scale <- scale(xdata)
@@ -28,28 +23,11 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   fit <- glmnet(xdata_scale, ydata, alpha = 1, lambda = cvfit_lasso$lambda.min) 
   plot(cvfit_lasso)
   
-  ## Prédiction des résultats
-  y_pred_lasso <- predict(fit, newx = xdata_scale, s = cvfit_lasso$lambda.min) 
-  ß_pred_lasso <- coef(fit, s = cvfit_lasso$lambda.min)
-  
-  ## Affichage des résultats
-  # Pénalité 
-  penalty_lasso <- paste('Pénalité :', round(cvfit_lasso$lambda.min,4))
-  print(penalty_lasso)
-  
-  # Nombre de variables sélectionnées 
-  nb_vars_lasso <- sum(ifelse(ß_pred_lasso[-1][ß_pred_lasso[-1]!=0 & ß_pred_lasso[-1]!=is.na(ß_pred_lasso[-1])], 1, 0))  
-  number_vars_lasso <- paste('Nombre de covariable sélectionnées :', nb_vars_lasso)
-  print(number_vars_lasso)
-  
-  # Variables sélectionnées 
-  vars_lasso <- which(ß_pred_lasso[-1]!=0 & ß_pred_lasso[-1]!=is.na(ß_pred_lasso[-1])) 
-  liste_vars_lasso <- paste('Liste des covariables sélectionnées :', paste(vars_lasso, collapse = ", "))
-  print(liste_vars_lasso)
+  ## Coefficients sélectionnées
+  ß_lasso <- coef(fit, s = cvfit_lasso$lambda.min)
+  covs_lasso <- ifelse(!is.na(ß_lasso[-1]) & ß_lasso[-1]!=0, 1, 0)
   
   ### ------ SCAD ------ ###
-  
-  print('--------  SCAD  --------')
   
   ## Modèle d'origine et plot
   fit <- ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
@@ -59,24 +37,11 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   cvfit_scad <- cv.ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
   plot(cvfit_scad)
   
-  ## Affichage des résultats
-  # Pénalité 
-  penalty_scad <- paste('Pénalité :', round(cvfit_scad$lambda.min,4))
-  print(penalty_scad)
-  
-  # Nombre de variables sélectionnées
-  nb_vars_scad <- predict(cvfit_scad, type = "nvars")
-  number_vars_scad <- paste('Nombre de covariable sélectionnées : ', nb_vars_scad)
-  print(number_vars_scad)
-  
-  # Variables sélectionnées
-  vars_scad <- predict(cvfit_scad, type = "vars")
-  list_vars_scad <- paste("Variables séletcionnées :", paste(vars_scad, collapse = ", "))
-  print(list_vars_scad)
+  # Coefficients sélectionnées
+  ß_scad <- coef(cvfit_scad)
+  covs_scad <- ifelse(!is.na(ß_lasso[-1]) & ß_scad[-1]!=0, 1, 0)
   
   ### ------  MCP  ------ ###
-  
-  print('--------  MCP  --------')
   
   ## Modèle d'origine et plot
   fit <- ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
@@ -86,25 +51,12 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   cvfit_mcp <- cv.ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
   plot(cvfit_mcp)
   
-  ## Affichage des résultats
-  # Pénalité 
-  penalty_mcp <- paste('Pénalité :', round(cvfit_mcp$lambda.min,4))
-  print(penalty_mcp)
-  
-  # Nombre de variables sélectionnées
-  nb_vars_mcp <- predict(cvfit_mcp, type = "nvars")
-  number_vars_mcp <- paste('Nombre de covariable sélectionnées : ', nb_vars_mcp)
-  print(number_vars_mcp)
-  
-  # Variables sélectionnées
-  vars_mcp <- predict(cvfit_mcp, type = "vars")
-  list_vars_mcp <- paste("Variables séletcionnées :", paste(vars_mcp, collapse = ", "))
-  print(list_vars_mcp)
+  ## Coefficients sélectionnées
+  ß_mcp <- coef(cvfit_mcp)
+  covs_mcp <- ifelse(!is.na(ß_lasso[-1]) & ß_mcp[-1]!=0, 1, 0)
   
   ### ------  STEPAIC  ------ ###
-
-  print('--------  STEPAIC  --------')
-
+  
   ## Ajustement du modèle SCAD avec validation croisée
   l_data <- cbind.data.frame(ydata, xdata)
   f.sat <- as.formula('ydata ~ .')
@@ -113,24 +65,20 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   model.cst <- lm(f.cst, data = l_data)
   model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
 
-  ## Prédiction des coefficients
-  y_pred_aic <- predict(model_step)
-  ß_pred_aic <- coef(model_step)
+  ## Coefficients sélectionnées
+  ß_step <- coef(model_step)
+  print(ß_step)
+  covs_step <- ifelse(!is.na(ß_lasso[-1]) & ß_step[-1]!=0, 1, 0)
 
-  ## Affichage des résultats
-  # Nombre de variables sélectionnées
-  nb_vars_aic <- length(ß_pred_aic[-1])
-  number_vars_aic <- paste('Nombre de covariable sélectionnées :', nb_vars_aic)
-  print(number_vars_aic)
-
-  # Variables sélectionnées
-  vars_aic <- which(ß_pred_aic[-1]!=0)
-  liste_vars_aic <- paste('Liste des covariables sélectionnées :', paste(vars_aic, collapse = ", "))
-  #print(liste_vars_aic)
-
+  return(rbind(covs_lasso, covs_scad, covs_mcp, covs_step))
+  #return(list(lasso = covs_lasso, scad = covs_scad, mcp = covs_mcp, stepAIC = covs_step))
 }
 
+data("QuickStartExample")
+X <- QuickStartExample$x
+y <- QuickStartExample$y
 
+eval_methode_auto(X,y,5)
 
 ### -----------------------------  Simulation  ----------------------------- ###
 
@@ -168,11 +116,8 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   return(res)
 }
 
-#simulation(100,50,20,10)
 
-
-
-### -----------------------------  Resultat  ----------------------------- ###
+### ------------------------------  Résultat  ------------------------------ ###
 
 
 resultat <- function(Nb, Cov, Pos_Cov, Rep) {
