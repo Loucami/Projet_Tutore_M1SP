@@ -136,7 +136,7 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   return(list(res = resultat[-1,], data = données))
 }
 
-resultat <- resultat_simulation(100, 30, 20, 10)
+resultat <- resultat_simulation(100, 30, 20, 100)
 
 
 
