@@ -16,4 +16,4 @@ Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* 
 
 ### Resultat()
 
-Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : **LASSO**, **SCAD**, **MCP**, **STEPAIC**. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *4xR*. 
+Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : *LASSO*, *SCAD*, *MCP*, **STEPAIC**. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *(4xR)xC*. 
