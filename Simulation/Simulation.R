@@ -16,13 +16,13 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   xdata_scale <- scale(xdata)
   
   ## Modèle d'origine et plot
-  fit <- glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
-  plot(fit)
+  # fit <- glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
+  # plot(fit)
   
   ## Ajustement du modèle LASSO avec validation croisée
   cvfit_lasso <- cv.glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
   fit <- glmnet(xdata_scale, ydata, alpha = 1, lambda = cvfit_lasso$lambda.min) 
-  plot(cvfit_lasso)
+  # plot(cvfit_lasso)
   
   ## Coefficients sélectionnées
   ß_lasso <- coef(fit, s = cvfit_lasso$lambda.min)
@@ -31,12 +31,12 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   ### ------ SCAD ------ ###
   
   ## Modèle d'origine et plot
-  fit <- ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
-  plot(fit)
+  # fit <- ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
+  # plot(fit)
   
   ## Ajustement du modèle SCAD avec validation croisée
   cvfit_scad <- cv.ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
-  plot(cvfit_scad)
+  # plot(cvfit_scad)
   
   # Coefficients sélectionnées
   ß_scad <- coef(cvfit_scad)
@@ -45,12 +45,12 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   ### ------  MCP  ------ ###
   
   ## Modèle d'origine et plot
-  fit <- ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
-  plot(fit)
+  # fit <- ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
+  # plot(fit)
   
   ## Ajustement du modèle SCAD avec validation croisée
   cvfit_mcp <- cv.ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
-  plot(cvfit_mcp)
+  # plot(cvfit_mcp)
   
   ## Coefficients sélectionnées
   ß_mcp <- coef(cvfit_mcp)
@@ -62,7 +62,7 @@ eval_methode_auto <- function(xdata, ydata, folds) {
   l_data <- cbind.data.frame(ydata, xdata)
   f.sat <- as.formula('ydata ~ .')
   model.sat <- lm(f.sat, data = l_data)
-  f.cst <- as.formula('y ~ 1')
+  f.cst <- as.formula('ydata ~ 1')
   model.cst <- lm(f.cst, data = l_data)
   model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
 
@@ -108,7 +108,7 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
     # On crée Y
     Y <- X %*% ß + e
     
-    res[[r]] <- list(X = X, Y = Y)
+    res[[r]] <- list(x = X, y = Y)
   }
   
   return(res)
@@ -124,18 +124,34 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   données <- simulation(Nb, Cov, Pos_Cov, Rep)
   resultat <- numeric(Cov)
   
-  # Évaluation par les quatre méthodes
+  # Évaluation par les quatre méthodes sur tout les réplicas
   for (i in 1:Rep) {
-    xdata <- données[[i]]$X
-    ydata <- données[[i]]$Y
+    xdata <- données[[i]]$x
+    ydata <- données[[i]]$y
     covs <- eval_methode_auto(xdata, ydata, 5)
     
     resultat <- rbind(resultat, covs)
   }
   
-  return(list(res = resultat[-1,], data = données))
+  resultat <- resultat[-1,] # J'ai crée resultat avec une ligne vide pour pouvoir ajouter ensuite plusieurs lignes à la fois, je l'enlève donc ici
+  
+  # Résumé des 4 méthodes sur l'ensemble des données 
+  resume_grps <- list()
+  nb_lignes <- nrow(resultat)
+  for (i in 1:4) {
+    i_grp <- seq(i, nb_lignes, by = 4)
+    somme_lignes <- rowSums(resultat[i_grp, ])
+    moy_grp <- mean(somme_lignes)
+    resume_grps <- append(resume_grps, moy_grp)
+  }
+  resume_grps <- list(LASSO = resume_grps[[1]], 
+                      SCAD = resume_grps[[2]],
+                      MCP = resume_grps[[3]], 
+                      STEP = resume_grps[[4]])
+  
+  return(list(result = resultat[-1,], resum = resume_grps, data = données))
 }
 
-resultat <- resultat_simulation(100, 30, 20, 10)
-
+resultat <- resultat_simulation(100, 100, 20, 20)
+resultat$resum
 
