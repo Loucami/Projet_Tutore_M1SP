@@ -163,4 +163,5 @@ resultat$resum
 #   - Il faudrait regarder pour un nombre de variables et de réplicas + important
 #   - Il faudrait regarder de façon à ce qu'en augmentant le nombre de variables, ont garde les variables précédentes (200 -> 500, ont gardes les 200 mêmes premières parmi les 500)
 #   - En conséquence, il faudrait peut être séparé complètement les fonctions (créatino de la simulation en dehors de resultat())
+#   - Écrire tout ça dans des fichiers différents ? 
 
