@@ -152,6 +152,15 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   return(list(result = resultat[-1,], resum = resume_grps, data = données))
 }
 
-resultat <- resultat_simulation(100, 100, 20, 20)
+resultat <- resultat_simulation(100, 100, 20, 50)
 resultat$resum
+
+
+# Remarques : 
+#   - LASSO, SCAD, MCP ont l'air de très bien fonctionné 
+#   - STEPAIC plus douteux
+#   - Très rapidement très long à procéder aux fonctions
+#   - Il faudrait regarder pour un nombre de variables et de réplicas + important
+#   - Il faudrait regarder de façon à ce qu'en augmentant le nombre de variables, ont garde les variables précédentes (200 -> 500, ont gardes les 200 mêmes premières parmi les 500)
+#   - En conséquence, il faudrait peut être séparé complètement les fonctions (créatino de la simulation en dehors de resultat())
 
