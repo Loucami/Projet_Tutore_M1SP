@@ -1,82 +1,6 @@
 
-library(glmnet)
-library(ncvreg)
-library(MASS)
+source("Simulation/Methode_Select.R")
 library(splus2R)
-
-
-### ------------------------  Méthodes d'évaluation  ----------------------- ###
-
-
-eval_methode_auto <- function(xdata, ydata, folds) {
-
-  ### ------ LASSO ------ ###
-  
-  ## Normalisation de X
-  xdata_scale <- scale(xdata)
-  
-  ## Modèle d'origine et plot
-  # fit <- glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
-  # plot(fit)
-  
-  ## Ajustement du modèle LASSO avec validation croisée
-  cvfit_lasso <- cv.glmnet(xdata_scale, ydata, alpha = 1, nfolds = folds)
-  fit <- glmnet(xdata_scale, ydata, alpha = 1, lambda = cvfit_lasso$lambda.min) 
-  # plot(cvfit_lasso)
-  
-  ## Coefficients sélectionnées
-  ß_lasso <- coef(fit, s = cvfit_lasso$lambda.min)
-  covs_lasso <- ifelse(ß_lasso[-1]!=is.na(ß_lasso[-1]) & ß_lasso[-1]!=0, 1, 0)
-  
-  ### ------ SCAD ------ ###
-  
-  ## Modèle d'origine et plot
-  # fit <- ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
-  # plot(fit)
-  
-  ## Ajustement du modèle SCAD avec validation croisée
-  cvfit_scad <- cv.ncvreg(xdata, ydata, penalty = 'SCAD', nfolds = folds)
-  # plot(cvfit_scad)
-  
-  # Coefficients sélectionnées
-  ß_scad <- coef(cvfit_scad)
-  covs_scad <- ifelse(ß_scad[-1]!=is.na(ß_scad[-1]) & ß_scad[-1]!=0, 1, 0)
-  
-  ### ------  MCP  ------ ###
-  
-  ## Modèle d'origine et plot
-  # fit <- ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
-  # plot(fit)
-  
-  ## Ajustement du modèle SCAD avec validation croisée
-  cvfit_mcp <- cv.ncvreg(xdata, ydata, penalty = 'MCP', nfolds = folds)
-  # plot(cvfit_mcp)
-  
-  ## Coefficients sélectionnées
-  ß_mcp <- coef(cvfit_mcp)
-  covs_mcp <- ifelse(ß_mcp[-1]!=is.na(ß_mcp[-1]) & ß_mcp[-1]!=0, 1, 0)
-  
-  ### ------  STEPAIC  ------ ###
-  
-  ## Ajustement du modèle SCAD avec validation croisée
-  l_data <- cbind.data.frame(ydata, xdata)
-  f.sat <- as.formula('ydata ~ .')
-  model.sat <- lm(f.sat, data = l_data)
-  f.cst <- as.formula('ydata ~ 1')
-  model.cst <- lm(f.cst, data = l_data)
-  model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
-
-  ## Coefficients sélectionnées
-  ß_step <- coef(model_step)
-  cols_select <- gsub("`", "", names(ß_step[-1]))
-  cols <- names(l_data[-1])
-  covs_step <- rep(0, length(cols))
-  covs_step[match(cols_select, cols)] <- ß_step[-1]
-  covs_step <- ifelse(covs_step!=is.na(covs_step) & covs_step!=0, 1, 0)
-
-  return(rbind(covs_lasso, covs_scad, covs_mcp, covs_step))
-  #return(list(lasso = covs_lasso, scad = covs_scad, mcp = covs_mcp, stepAIC = covs_step))
-}
 
 
 ### -----------------------------  Simulation  ----------------------------- ###
@@ -120,19 +44,17 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep) {
 
 resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
   
-  # Création des jeux de données 
-  données <- simulation(Nb, Cov, Pos_Cov, Rep)
-  resultat <- numeric(Cov)
+  # Création des données
+  donnees <- simulation(Nb, Cov, Pos_Cov, Rep)
   
   # Évaluation par les quatre méthodes sur tout les réplicas
+  resultat <- numeric(Cov)
   for (i in 1:Rep) {
-    xdata <- données[[i]]$x
-    ydata <- données[[i]]$y
-    covs <- eval_methode_auto(xdata, ydata, 5)
-    
+    xdata <- donnees[[i]]$x
+    ydata <- donnees[[i]]$y
+    covs <- methode_select(xdata, ydata, 5)
     resultat <- rbind(resultat, covs)
   }
-  
   resultat <- resultat[-1,] # J'ai crée resultat avec une ligne vide pour pouvoir ajouter ensuite plusieurs lignes à la fois, je l'enlève donc ici
   
   # Résumé des 4 méthodes sur l'ensemble des données 
@@ -149,11 +71,27 @@ resultat_simulation <- function(Nb, Cov, Pos_Cov, Rep) {
                       MCP = resume_grps[[3]], 
                       STEP = resume_grps[[4]])
   
-  return(list(result = resultat[-1,], resum = resume_grps, data = données))
+  return(list(result = resultat, resum = resume_grps, data = donnees))
 }
 
-resultat <- resultat_simulation(100, 100, 20, 50)
-resultat$resum
+
+### --------------------------------  Test  -------------------------------- ###
+
+
+resultat1 <- resultat_simulation(100, 30, 20, 100)
+resultat1$resum
+
+resultat2 <- resultat_simulation(100, 50, 20, 100)
+resultat2$resum
+
+resultat3 <- resultat_simulation(100, 100, 20, 100)
+resultat3$resum
+
+resultat4 <- resultat_simulation(100, 200, 20, 100)
+resultat4$resum
+
+resultat5 <- resultat_simulation(100, 500, 20, 100)
+resultat5$resum
 
 
 # Remarques : 
@@ -162,6 +100,4 @@ resultat$resum
 #   - Très rapidement très long à procéder aux fonctions
 #   - Il faudrait regarder pour un nombre de variables et de réplicas + important
 #   - Il faudrait regarder de façon à ce qu'en augmentant le nombre de variables, ont garde les variables précédentes (200 -> 500, ont gardes les 200 mêmes premières parmi les 500)
-#   - En conséquence, il faudrait peut être séparé complètement les fonctions (créatino de la simulation en dehors de resultat())
-#   - Écrire tout ça dans des fichiers différents ? 
-
+#   - En conséquence, il faudrait peut être séparé complètement les fonctions (création de la simulation en dehors de resultat())
