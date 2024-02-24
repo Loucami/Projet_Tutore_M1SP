@@ -9,7 +9,7 @@ Reprend la fonction *Methode_Select()* présente dans la section **Méthodes** e
 
 Simule des jeux de données en fonction de paramètres définis, puis leur applique les différentes méthodes de sélections de covariables. 
 
-#### Simulation()
+### Simulation()
 
 Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* réplicats : 
 1. Des vecteurs *mu* (rnorm) et *sigma2* (rexp) de taille *C* sont fixés (-> **X**).
@@ -20,6 +20,6 @@ Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* 
 - **e** (rnorm) est déterminé à partir du *sigma2* fixé à 0.10.
 - **Y** est déterminé à partir **ß**, ainsi que des nouveaux **X** et **e**. 
 
-#### Resultat()
+### Resultat()
 
 Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : *LASSO*, *SCAD*, *MCP*, *STEPAIC*. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *(4xR)xC*. 
