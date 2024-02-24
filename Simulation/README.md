@@ -1,9 +1,15 @@
-# Simulation.R
 
 Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées *(cf. Méthodes)*.
 
+## Methode_Select.R
 
-### Simulation()
+Reprend la fonction *Methode_Select()* présente dans la section **Méthodes** et la modifie légèrement, de façon à ressortir une matrice binaire avec en ligne les quatre méthodes de sélection (LASSO, SCAD, MCP, STEPAIC), en colonne les covariables, et des 1 au niveau des covariables sélectionnées. 
+
+## Simulation.R
+
+Simule des jeux de données suivant des paramètres définis, puis leur applique les différentes méthodes de sélections de covariables (LASSO, SCAD, MCP, STEPAIC). 
+
+#### Simulation()
 
 Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* réplicats : 
 1. Des vecteurs *mu* (rnorm) et *sigma2* (rexp) de taille *C* sont fixés (-> **X**).
@@ -14,6 +20,6 @@ Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* 
 - **e** (rnorm) est déterminé à partir du *sigma2* fixé à 0.10.
 - **Y** est déterminé à partir **ß**, ainsi que des nouveaux **X** et **e**. 
 
-### Resultat()
+#### Resultat()
 
 Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : *LASSO*, *SCAD*, *MCP*, *STEPAIC*. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *(4xR)xC*. 
