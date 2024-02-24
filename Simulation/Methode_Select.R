@@ -60,19 +60,15 @@ methode_select <- function(xdata, ydata, folds) {
   
   ## Ajustement du modèle SCAD avec validation croisée
   l_data <- cbind.data.frame(ydata, xdata)
-  f.sat <- as.formula('ydata ~ .')
-  model.sat <- lm(f.sat, data = l_data)
-  f.cst <- as.formula('ydata ~ 1')
-  model.cst <- lm(f.cst, data = l_data)
-  model_step = stepAIC(model.cst,  scope = list(upper = model.sat, lower = model.cst), trace = FALSE)
-  
+  model.sat <- lm(ydata ~ ., data = l_data)
+  model.cst <- lm(ydata ~ 1, data = l_data)
+  model_step = stepAIC(model.cst,  scope = list(lower = model.cst, upper = model.sat), trace = FALSE)
+
   ## Coefficients sélectionnées
-  ß_step <- coef(model_step)
-  cols_select <- gsub("`", "", names(ß_step[-1]))
   cols <- names(l_data[-1])
-  covs_step <- rep(0, length(cols))
-  covs_step[match(cols_select, cols)] <- ß_step[-1]
-  covs_step <- ifelse(covs_step!=is.na(covs_step) & covs_step!=0, 1, 0)
+  cols_select <- which(coef(model_step)[-1] != 0)
+  covs_step <- numeric(length(cols))
+  covs_step[cols_select] <- 1
   
   return(rbind(covs_lasso, covs_scad, covs_mcp, covs_step))
   #return(list(lasso = covs_lasso, scad = covs_scad, mcp = covs_mcp, stepAIC = covs_step))

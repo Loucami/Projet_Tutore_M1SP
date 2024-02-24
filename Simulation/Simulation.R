@@ -96,7 +96,7 @@ resultat5$resum
 
 # Remarques : 
 #   - LASSO, SCAD, MCP ont l'air de très bien fonctionné 
-#   - STEPAIC plus douteux
+#   - STEPAIC plus douteux (trop de variables sélectionnées)
 #   - Très rapidement très long à procéder aux fonctions
 #   - Il faudrait regarder pour un nombre de variables et de réplicas + important
 #   - Il faudrait regarder de façon à ce qu'en augmentant le nombre de variables, ont garde les variables précédentes (200 -> 500, ont gardes les 200 mêmes premières parmi les 500)
