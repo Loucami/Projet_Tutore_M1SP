@@ -94,7 +94,7 @@ resultat_simulation <- function(Nb, Covs, Pos_Cov, Rep) {
 
 ### --------------------------------  Test  -------------------------------- ###
 
-liste_covs <- c(30, 50, 100, 200)
+liste_covs <- c(50, 100, 200, 500)
 resimu <- resultat_simulation(100, liste_covs, 20, 100)
 for (r in 1:length(resimu)) {
   print(paste(liste_covs[r],'covariables'))

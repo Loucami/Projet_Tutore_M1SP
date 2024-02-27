@@ -24,3 +24,7 @@ Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* 
 ### Resultat()
 
 Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : *LASSO*, *SCAD*, *MCP*, *STEPAIC*. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *(4xR)xC*. 
+
+## SimuTest.R
+
+Reprend les deux fonctions présentent dans Simulation.R, mais les adapte de façon à pouvoir augmenter le nombre de covariables tout en gardant les mêmes variables d'intérêts. 
