@@ -1,4 +1,5 @@
 
+
 source("Simulation/Methodes.R")
 library(splus2R)
 
@@ -17,6 +18,8 @@ simulation <- function(Nb, Cov, Pos_Cov, Rep, ß = NULL) {
     ß_P <- rnorm(Pos_Cov, 0, 2)
     ß_N <- numeric(Cov-Pos_Cov)
     ß <- c(ß_P, ß_N)
+  } else {
+    ß <- c(ß, rep(0, Cov-length(ß)))
   }
   
   # Paramètre pour e
