@@ -1,18 +1,18 @@
 # Simulation
 
-Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées *(cf. Méthodes)*.
+Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées *(cf. Méthodes)*, puis évaluer.
+
 
 ## Methodes.R
 
 Reprend la fonction de sélection de covariables (*Methodes.R*) présente dans la section **Méthodes** et la modifie légèrement, de façon à ressortir une matrice binaire avec en ligne les quatre méthodes de sélection (LASSO, SCAD, MCP, STEPAIC), en colonne les covariables, et des 1 au niveau des covariables sélectionnées. 
 
+
 ## Simulation.R
 
-Simule des jeux de données en fonction de paramètres définis, puis leur applique les différentes méthodes de sélections de covariables. 
+Simule la création d'un jeu de données en fonction de paramètres prédéfinis. 
 
-### Simulation()
-
-Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* réplicats : 
+À titre d'exemple, un jeu de données contenant *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* réplicats, est simulée comme suit : 
 1. Des vecteurs *mu* (rnorm) et *sigma2* (rexp) de taille *C* sont fixés (-> **X**).
 2. Le vecteur **ß** (rnorm) des coefficients de taille *C* est fixé.
 3. Un deuxième *sigma2* est fixé à 0.10 (-> **e**).
@@ -21,10 +21,10 @@ Pour *N* enregistrements, *C* covariables, *P* covariables d'intérêts, et *R* 
 - **e** (rnorm) est déterminé à partir du *sigma2* fixé à 0.10.
 - **Y** est déterminé à partir **ß**, ainsi que des nouveaux **X** et **e**. 
 
-### Resultat()
+Le nombre de covariables peut également être un vecteur contenant plusieurs valeurs, afin de créer plusieurs jeux de données disposant d'un nombre différents de covariables. Dans une telle situation, le vecteur **ß** sera conservé d'un jeu de données à l'autre, et des variables non pertinente *(=0)* lui seront simplement ajouter au fur et à mesure. L'idée est de gardé les mêmes covariables d'intérêts. 
 
-Pour chacun des *R* réplicats, les quatre méthodes de sélections de covariables sont appliquées : *LASSO*, *SCAD*, *MCP*, *STEPAIC*. Les covariables sélectionnées sont stockées dans une matrice binaire, qui est finalement renvoyer. Une matrice finale de taille *(4xR)xC*. 
 
-## SimuTest.R
+## Evaluation.R
 
-Reprend les deux fonctions présentent dans Simulation.R, mais les adapte de façon à pouvoir augmenter le nombre de covariables tout en gardant les mêmes variables d'intérêts. 
+À partir d'une simulation, la fonction *Evaluation()* applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet (LASSO, SCAD, MCP, STEPAIC). Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment l'Accuracy, le F1Score, le FNR, le FPR, le AUC, et le RMSE. 
+
