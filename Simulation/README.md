@@ -1,6 +1,6 @@
 # Simulation
 
-Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées *(cf. Méthodes)*, puis évaluer.
+Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées, puis évaluer.
 
 
 ## Methodes.R
@@ -21,10 +21,10 @@ Simule la création d'un jeu de données en fonction de paramètres prédéfinis
 - **e** (rnorm) est déterminé à partir du *sigma2* fixé à 0.10.
 - **Y** est déterminé à partir **ß**, ainsi que des nouveaux **X** et **e**. 
 
-Le nombre de covariables peut également être un vecteur contenant plusieurs valeurs, afin de créer plusieurs jeux de données disposant d'un nombre différents de covariables. Dans une telle situation, le vecteur **ß** sera conservé d'un jeu de données à l'autre, et des variables non pertinente *(=0)* lui seront simplement ajouter au fur et à mesure. L'idée est de gardé les mêmes covariables d'intérêts. 
+Le nombre de covariables peut également être un vecteur contenant plusieurs valeurs, afin de créer plusieurs jeux de données disposant d'un nombre différents de covariables. Dans une telle situation, le vecteur **ß** sera conservé d'un jeu de données à l'autre, et des variables non pertinente (=0) lui seront simplement ajouter au fur et à mesure. L'idée est de gardé les mêmes covariables d'intérêts. 
 
 
 ## Evaluation.R
 
-À partir d'une simulation, la fonction *Evaluation()* applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet (LASSO, SCAD, MCP, STEPAIC). Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment l'Accuracy, le F1Score, le FNR, le FPR, le AUC, et le RMSE. 
+À partir d'une simulation, la fonction applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet. Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment l'*Accuracy*, le *F1Score*, le *FNR*, le *FPR*, le *AUC*, et le *RMSE*. 
 
