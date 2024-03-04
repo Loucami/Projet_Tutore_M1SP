@@ -121,7 +121,7 @@ simulation <- Simulation(100, covariables, 20, 100)
 evaluation <- Evaluation(simulation)
 
 # Affichage de l'exemple
-for (eval in evaluation){
+for (eval in evaluation[[2]]){
   print(paste(attributes(eval)$nb_variables, 'variables'))
   print(eval)
 }
@@ -131,9 +131,9 @@ library(dplyr)
 library(knitr)
 library(kableExtra)
 library(webshot2)
-for (eval in evaluation) {
+for (eval in evaluation[[2]]) {
   nb_covs <- as.character(attributes(eval)$nb_variables)
-  kable(eval$evaluations$nb_covs, caption = paste("Résultats pour Covs =", nb_covs), format = "latex") %>%
+  kable(eval, caption = paste("Résultats pour Covs =", nb_covs), format = "latex") %>%
     kable_styling() %>%
     save_kable(paste("tableau",nb_covs,".tex", sep = "_"))
 }
