@@ -115,5 +115,28 @@ Evaluation <- function(simulation) {
 
 
 # Exemple 
-simulation <- Simulation(100, 30, 20, 100)
+
+covariables <- c(50,100,200,500)
+simulation <- Simulation(100, covariables, 20, 100)
 evaluation <- Evaluation(simulation)
+
+# Affichage de l'exemple
+for (eval in evaluation){
+  print(paste(attributes(eval)$nb_variables, 'variables'))
+  print(eval)
+}
+
+# Tableaux des résultats
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(webshot2)
+for (eval in evaluation) {
+  nb_covs <- as.character(attributes(eval)$nb_variables)
+  kable(eval$evaluations$nb_covs, caption = paste("Résultats pour Covs =", nb_covs), format = "latex") %>%
+    kable_styling() %>%
+    save_kable(paste("tableau",nb_covs,".tex", sep = "_"))
+}
+
+
+
