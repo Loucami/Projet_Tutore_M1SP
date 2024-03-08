@@ -22,8 +22,14 @@ xdata <- as.matrix(xdata)
 ydata <- sp.df %>% filter(sp.df$id %in% id_commun$id) 
 ydata <- ydata$theta
 
-resultats <- Resultats(xdata[,1:500], ydata)
-resultats$resultats_nb
+
+library(glmnet)
+xdata_scale <- scale(xdata)
+cvfit_lasso <- cv.glmnet(xdata_scale, ydata, alpha = 1, nfolds = 5)
+cvfit_lasso$lambda.min
+fit <- glmnet(xdata_scale, ydata, alpha = 1, lambda = cvfit_lasso$lambda.min) 
+
+
 
 
 resLASSO <- list()
