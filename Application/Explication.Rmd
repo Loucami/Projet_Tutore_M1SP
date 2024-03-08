@@ -1,0 +1,103 @@
+---
+title: "Génération des données [DO NOT RUN]"
+author: "Auriane Gabaut"
+date: "29 février 2029"
+output: pdf_document
+bibliography: ref.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(lixoftConnectors)
+})
+```
+
+# Description du modèle 
+
+Nous souhaitons sélectionner les gènes à D0 prédicteur de la production d'anticorps dans le cas du vaccin YF17D contre la fièvre jaune. Pour cela, on modèlise la réponse immunitaire humoral au vaccin par @Le2015. 
+
+$$ \displaystyle\left\{ \begin{matrix} \frac{d}{dt} B(t) &=& (\rho \mathbf 1_{T_{on}\leq t < T_{off}}  - \delta_B\mathbf 1_{T_{off}\leq t}) B(t) \\
+\frac{d}{dt} A(t) &=& \theta B(t) - \delta_Ab A(t) \end{matrix} \right. $$
+
+On suppose qu'on a des cellules sécrétrices d'anticoprs $B$ qui sécrète donc au taux $\theta$ les anticorps $A$. 
+
+# Description des données
+
+On récupère les données disponibles via Immunespace @Hagan2022. 
+
+```{r}
+
+## Gather participant ID for YF
+all_immdata_with_response <- readRDS("all_immdata_with_response.rds") %>%
+  filter(pathogen=="Yellow Fever") %>%
+  select(participant_id,gender,age_imputed,vaccine)
+
+gene_expression <- t(readRDS("all_norm_withResponse_eset.rds")@assayData$exprs)
+
+col=rownames(gene_expression)
+id=c(1:length(col)) #store the personal identifier
+date=c(1:length(col)) #store the date of the sample
+weird = c(1:length(col))
+for (i in c(1:length(col))){
+  id[i]=strsplit(col[i], "_")[[1]][1]
+  date[i]=strsplit(col[i], "_")[[1]][2]
+  weird[i] = strsplit(col[i], "_")[[1]][4]
+}
+
+rowToKeep = intersect(which(id %in% all_immdata_with_response$participant_id), which(date==0))
+idKept <- id[rowToKeep]
+duplicated(idKept)
+# one subjid duplicate for same day so averaging on the measurement
+# on line 61 and 71, i.e. 1925 et 1985
+gene_expression[1925,] <- apply(gene_expression[c(1925,1985),],2,FUN=mean)
+
+gene_expression <- gene_expression[setdiff(rowToKeep,1985),]
+# 96 individus
+col=rownames(gene_expression)
+id=c(1:length(col)) #store the personal identifier
+for (i in c(1:length(col))){
+  id[i]=strsplit(col[i], "_")[[1]][1]
+}
+
+rownames(gene_expression) <- id
+
+# gene_expression dataset contain gene expression of all individual receiving YF17D vaccine at baseline (D0)
+
+## Neutralizing antibody
+
+neut_ab_titer <- read.csv("neut_ab_titer_YF.tsv",sep="\t")
+cov = neut_ab_titer[!duplicated(neut_ab_titer$Participant.ID),c("Participant.ID","Gender","Race")]
+dataSet <- data.frame(id=neut_ab_titer$Participant.ID,time = neut_ab_titer$Study.Time.Collected, observation = neut_ab_titer$Value.Preferred,SEXE=neut_ab_titer$Gender,RACE=neut_ab_titer$Race)
+dataSet <- dataSet[!is.na(dataSet$observation),]
+
+#• FInalement on retire ceux qui on une seul observation...
+dataSet <- dataSet[duplicated(dataSet$id),]
+
+write.csv(dataSet,file="temporaryValue.txt",quote = F,row.names = F)
+```
+
+# Estimations du taux de production d'anticorps
+
+On utilise monolix pour estimer le taux de production d'anticoprs de chaque individu, en fitant le modèle précédent au données d'anticorps disponible. @monolix2023 @lixoft
+https://monolix.lixoft.com/tasks/conditional-distribution/
+
+```{r}
+library(lixoftConnectors)
+initializeLixoftConnectors("monolix")
+
+loadProject("YF1_run2_run2.mlxtran")
+
+sp.df <- getEstimatedIndividualParameters()$conditionalMean %>% select(id,theta)
+```
+
+Maintenant `sp.df` contient les $\theta_i$ estimé par "Conditional mean" i.e. moyenne de paramètres estimés par MCMC sur la loi à posteriori (ie sachant les données et les paramètres de population). `gene_expression` contient les gènes. 
+
+# NOTE : 
+
+Les valeurs estimés par monolix pour $\theta$ sont très basses, cela peut provenir d'un mauvaise ajustement aux données, du fait que beaucoup de patients ont peu de mesures, le modèle méchanistique n'est pas le plus approprié (mon hypothèse favorite). Donc les résultats seront surement bizarre ; néanmoins, je ne trouve dans la littérature pas d'autres idées de modèles méchanistes. 
+Les données nécéssitent surement une analyse plus intensive mais qui sort du cadre du projet. 
+
