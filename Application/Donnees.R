@@ -22,26 +22,17 @@ xdata <- as.matrix(xdata)
 ydata <- sp.df %>% filter(sp.df$id %in% id_commun$id) 
 ydata <- ydata$theta
 
-resultats1 <- Resultats(xdata[,1:1000],ydata)
-resultats1$resultats_nb$LASSO
+resultats1 <- Resultats1(xdata[,1:500],ydata)
+resultats1$resultats_nb
 
+resultats2 <- Resultats2(xdata[,1:500],ydata)
+resultats2$resultats_nb
+
+
+# Stability selection pour Lasso
 library(sharp)
-resultats2 <- VariableSelection(xdata[,1:1000],ydata)
-sum(SelectedVariables(resultats2))
+lasso <- VariableSelection(xdata[,1:500],ydata)
+sum(SelectedVariables(lasso))
 
-# resLASSO <- list()
-# resSCAD <- list()
-# resMCP <- list()
-# resSTEP <- list()
-# for (i in 1:5) {
-#   resultats <- Resultats(xdata[,1:5000],ydata)
-#   resLASSO[[i]] <- resultats$resultats_nb$LASSO
-#   resSCAD[[i]] <- resultats$resultats_nb$SCAD
-#   resMCP[[i]] <- resultats$resultats_nb$MCP
-#   resSTEP[[i]] <- resultats$resultats_nb$STEP
-# }
-# list(LASSO = mean(unlist(resLASSO)), 
-#      SCAD = mean(unlist(resSCAD)), 
-#      MCP = mean(unlist(resMCP)), 
-#      STEP = mean(unlist(resSTEP)))
+
 
