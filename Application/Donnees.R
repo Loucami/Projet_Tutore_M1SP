@@ -22,8 +22,8 @@ xdata <- as.matrix(xdata)
 ydata <- sp.df %>% filter(sp.df$id %in% id_commun$id) 
 ydata <- ydata$theta
 
-resultats1 <- Resultats1(xdata[,1:500],ydata)
-resultats1$resultats_nb
+# resultats1 <- Resultats1(xdata[,1:500],ydata)
+# resultats1$resultats_nb
 
 resultats2 <- Resultats2(xdata[,1:500],ydata)
 resultats2$resultats_nb
