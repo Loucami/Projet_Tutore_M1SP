@@ -43,16 +43,16 @@ Evaluation <- function(simulation) {
       moy_cols <- colMeans(res[i_grp,])
       res_grps[[i]] <- round(moy_cols)
     }
-    res_grps <- list(LASSO = res_grps[[1]],
-                     SCAD = res_grps[[2]],
-                     MCP = res_grps[[3]],
-                     STEP = res_grps[[4]])
+    res_grps <- list(STEP = res_grps[[1]],
+                     LASSO = res_grps[[2]],
+                     SCAD = res_grps[[3]],
+                     MCP = res_grps[[4]])
     
     # Résumé du nombre de covariables sélectionnées par chaque méthode, pour notre jeu de donnée
-    resume_grps <- list(LASSO = length(which(res_grps[[1]]!=0)),
-                        SCAD = length(which(res_grps[[2]]!=0)),
-                        MCP = length(which(res_grps[[3]]!=0)),
-                        STEP = length(which(res_grps[[4]]!=0)))
+    resume_grps <- list(STEP = length(which(res_grps[[1]]!=0)),
+                        LASSO = length(which(res_grps[[2]]!=0)),
+                        SCAD = length(which(res_grps[[3]]!=0)),
+                        MCP = length(which(res_grps[[4]]!=0)))
     
     # Aggrégation des resultats bruts, des résultats uniques pour chaque méthodes, du nombre de covariables séletcionnées
     resultats[[as.character(length(simulation[[s]][[1]]$ß))]] <- list(resultats_tot = res, 
@@ -81,9 +81,10 @@ Evaluation <- function(simulation) {
       pred <- prediction(covs_pred[[j]], covs_og)
       perf.ROC <- performance(pred, "tpr", "fpr")
       plot(perf.ROC, main="ROC Curve", col= "blue", lwd = 2)
+      lines(0:1, 0:1, col = "black", lty = 2)
       
       # Calcul du RMSE
-      rmse <- sqrt(mean((as.numeric(covs_pred[[j]]) - as.numeric(covs_og))^2))
+      # rmse <- sqrt(mean((as.numeric(covs_pred[[j]]) - as.numeric(covs_og))^2))
       
       # Calcul du FNR / FPR 
       FNR <- conf.matrix$table[2, 1] / sum(conf.matrix$table[2, ], na.rm = TRUE)
@@ -94,14 +95,13 @@ Evaluation <- function(simulation) {
                         F1score = round(conf.matrix$byClass['F1'], 3),
                         FNR = round(FNR,3),
                         FPR = round(FPR,3),
-                        AUC = round(conf.matrix$byClass['Balanced Accuracy'], 3),
-                        RMSE = round(rmse,4))
+                        AUC = round(conf.matrix$byClass['Balanced Accuracy'], 3))
     }
     
     # Aggrégation des évaluations des 4 méthodes dans un tableau
-    tab_evals <- data.frame(matrix(nrow = 4, ncol = 6))
-    rownames(tab_evals) <- c("LASSO", "SCAD", "MCP", "STEP")
-    colnames(tab_evals) <- c("Accuracy", "F1score", "FNR", "FPR", "AUC", "RMSE")
+    tab_evals <- data.frame(matrix(nrow = 4, ncol = 5))
+    rownames(tab_evals) <- c("STEPAIC", "LASSO", "SCAD", "MCP")
+    colnames(tab_evals) <- c("Accuracy", "F1score", "FNR", "FPR", "AUC")
     for (j in seq_along(eval)) {
       tab_evals[j, ] <- unlist(eval[[j]])
     }
@@ -115,28 +115,30 @@ Evaluation <- function(simulation) {
 
 
 # Exemple 
-
 covariables <- c(100,200,500,1000)
 simulation <- Simulation(100, covariables, 20, 100)
 evaluation <- Evaluation(simulation)
 
-# Affichage de l'exemple
-for (eval in evaluation[[2]]){
-  print(paste(attributes(eval)$nb_variables, 'variables'))
-  print(eval)
-}
 
 # Tableaux des résultats
 library(dplyr)
 library(knitr)
 library(kableExtra)
-library(webshot2)
-for (eval in evaluation[[2]]) {
-  nb_covs <- as.character(attributes(eval)$nb_variables)
-  kable(eval, caption = paste("Résultats pour Covs =", nb_covs), format = "latex") %>%
-    kable_styling() %>%
-    save_kable(paste("tableau",nb_covs,".tex", sep = "_"))
-}
 
+eval <- evaluation$evaluations
+nb_covs <- as.character(attributes(eval)$nb_variables)
 
+eval %>%
+  kable('latex', booktabs = T, caption = 'Évaluations des méthodes stepAIC, Lasso, SCAD et MCP') %>% 
+  kable_styling(latex_options = c("striped", "hold_position")) %>%
+  pack_rows("50 covariables", 1, 4) %>%
+  pack_rows("100 covariables", 5, 8)
 
+# print(kable(eval, align = 'c') %>%
+#   kable_styling(full_width = FALSE) %>%
+#   add_header_above(c(" " = 1, '100 covariables' = 5)))
+# 
+# kable(eval, align = 'c', format = 'latex') %>%
+#   kable_styling(full_width = FALSE) %>%
+#   add_header_above(c(" " = 1, '100 covariables' = 5)) %>% 
+#   save_kable(paste("tableau",nb_covs,'.tex', sep = ""))

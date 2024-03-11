@@ -70,6 +70,6 @@ methode_select <- function(xdata, ydata, folds) {
   covs_step <- numeric(length(cols))
   covs_step[cols_select] <- 1
   
-  return(rbind(covs_lasso, covs_scad, covs_mcp, covs_step))
+  return(rbind(covs_step, covs_lasso, covs_scad, covs_mcp))
   #return(list(lasso = covs_lasso, scad = covs_scad, mcp = covs_mcp, stepAIC = covs_step))
 }

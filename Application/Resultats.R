@@ -39,7 +39,7 @@ Resultats2 <- function(xdata, ydata) {
     res <- rbind(res, covs)
   }
   res <- res[-1,]
-  print(res)
+
   # Sélection unique de covariables pour chaque méthode
   resultat <- list()
   nb_lignes <- nrow(res)

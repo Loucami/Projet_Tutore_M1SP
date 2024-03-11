@@ -33,6 +33,3 @@ resultats2$resultats_nb
 library(sharp)
 lasso <- VariableSelection(xdata[,1:500],ydata)
 sum(SelectedVariables(lasso))
-
-
-
