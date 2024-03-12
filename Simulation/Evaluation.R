@@ -85,8 +85,8 @@ Evaluation <- function(simulation) {
       lines(0:1, 0:1, col = "black", lty = 2)
       
       # Calcul du FNR / FPR 
-      FNR <- conf.matrix$table[2, 1] / sum(conf.matrix$table[2, ], na.rm = TRUE)
-      FPR <- conf.matrix$table[1, 2] / sum(conf.matrix$table[1, ], na.rm = TRUE)
+      FNR <- conf.matrix$table[2, 1] / sum(conf.matrix$table[,2], na.rm = TRUE)
+      FPR <- conf.matrix$table[1, 2] / sum(conf.matrix$table[,2], na.rm = TRUE)
       
       # Aggrégation des évaluations pour chaque méthode, de chaque jeu de données
       eval[[j]] <- list(F1score = round(conf.matrix$byClass['F1'], 3),
