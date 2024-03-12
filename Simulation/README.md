@@ -26,5 +26,15 @@ Le nombre de covariables peut également être un vecteur contenant plusieurs va
 
 ## Evaluation.R
 
-À partir d'une simulation, la fonction applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet. Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment l'*Accuracy*, le *F1Score*, le *FNR*, le *FPR*, le *AUC*, et le *RMSE*. 
+À partir d'une simulation, la fonction applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet. Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment le *F1Score*, le *FNR*, le *FPR*, et le *AUC*.
+
+
+## Tableau_simulation.tex
+
+Fichier Latex contenant les résutlats d'évaluations des quatre méthodes, pour des jeux de données disposant de 20 covariables d'intérêts ainsi que 100, 200, 500 et 1000 covariables totales. 
+
+
+## ROC_100
+
+Fichier contenant les graphiques ROC des quatre méthodes pour un jeu de données disposant 100 covariables et 20 covariables d'intérêts.
 

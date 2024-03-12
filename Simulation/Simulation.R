@@ -1,4 +1,5 @@
 
+
 library(mvtnorm)
 library(splus2R)
 
@@ -6,11 +7,11 @@ library(splus2R)
 ### -----------------------------  Simulation  ----------------------------- ###
 
 
-Simulation <- function(Nb, Covs, Pos_Covs, Rep, ß=NULL) {
+Simulation <- function(Nb, Covs, Pos_Covs, Rep, ß = NULL) {
   
   resultats = list()
   if (is.numeric(Covs) && length(Covs) == 1) { Covs <- c(Covs) }
-    
+  
   # Création d'une liste pour accueillir les différents jeux de données
   donnees <- list()
   for (Cov in Covs) {
@@ -21,7 +22,7 @@ Simulation <- function(Nb, Covs, Pos_Covs, Rep, ß=NULL) {
     
     # Paramètres pour ß
     if (is.null(ß)) {
-      ß_P <- rnorm(Pos_Covs, 0, 2)
+      ß_P <- rnorm(Pos_Covs, 0, sqrt(2))
       ß_N <- numeric(Cov-Pos_Covs)
       ß <- c(ß_P, ß_N)
     } else {
@@ -38,7 +39,7 @@ Simulation <- function(Nb, Covs, Pos_Covs, Rep, ß=NULL) {
       X <- rmvnorm(Nb, mean = mu, sd = sqrt(sigma2_X))
       
       # On crée e
-      e <- rnorm(Nb, 0, sigma2_e)
+      e <- rnorm(Nb, 0, sqrt(sigma2_e))
       
       # On crée Y
       Y <- X %*% ß + e
@@ -48,11 +49,6 @@ Simulation <- function(Nb, Covs, Pos_Covs, Rep, ß=NULL) {
     
     resultats[[as.character(Cov)]] <- res
   }
-    
+  
   return(resultats)
 }
-
-
-# Exemple 
-test1 <- Simulation(100, 30, 20, 100)
-test2 <- Simulation(100, c(30,50), 20, 100)

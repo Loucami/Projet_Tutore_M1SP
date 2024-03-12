@@ -16,20 +16,26 @@ nrow(id_commun)
 
 # Test 
 gene_expression <- gene_expression[order(rownames(gene_expression)), ] #Pour que les individus soient dans le bon ordre
+# X
 xdata <- gene_expression %>% as.data.frame() %>% filter(rownames(gene_expression) %in% id_commun$id)
 xdata <- as.matrix(xdata)
-
+# Y
 ydata <- sp.df %>% filter(sp.df$id %in% id_commun$id) 
 ydata <- ydata$theta
 
-# resultats1 <- Resultats1(xdata[,1:500],ydata)
-# resultats1$resultats_nb
+resultats1 <- Resultats1(xdata[,1:100],ydata)
+resultats1$resultats_nb
 
-resultats2 <- Resultats2(xdata[,1:500],ydata)
+resultats2 <- Resultats2(xdata[,1:100],ydata)
 resultats2$resultats_nb
 
+resultats3 <- Methodes2(xdata[,1:100], ydata)
+resultats3$resultats_nb
 
-# Stability selection pour Lasso
+
+
+
+# SHARP : Stability selection pour Lasso
 library(sharp)
 lasso <- VariableSelection(xdata[,1:500],ydata)
 sum(SelectedVariables(lasso))

@@ -14,6 +14,7 @@ library(caret)
 library(ROCR)
 
 
+
 ### -----------------------------  Evaluation  ----------------------------- ###
 
 
@@ -43,13 +44,13 @@ Evaluation <- function(simulation) {
       moy_cols <- colMeans(res[i_grp,])
       res_grps[[i]] <- round(moy_cols)
     }
-    res_grps <- list(STEP = res_grps[[1]],
+    res_grps <- list(STEPAIC = res_grps[[1]],
                      LASSO = res_grps[[2]],
                      SCAD = res_grps[[3]],
                      MCP = res_grps[[4]])
     
     # Résumé du nombre de covariables sélectionnées par chaque méthode, pour notre jeu de donnée
-    resume_grps <- list(STEP = length(which(res_grps[[1]]!=0)),
+    resume_grps <- list(STEPAIC = length(which(res_grps[[1]]!=0)),
                         LASSO = length(which(res_grps[[2]]!=0)),
                         SCAD = length(which(res_grps[[3]]!=0)),
                         MCP = length(which(res_grps[[4]]!=0)))
@@ -79,29 +80,25 @@ Evaluation <- function(simulation) {
       
       # Courbe ROC
       pred <- prediction(covs_pred[[j]], covs_og)
-      perf.ROC <- performance(pred, "tpr", "fpr")
+      perf.ROC <- performance(pred, "tpr", "fpr") 
       plot(perf.ROC, main="ROC Curve", col= "blue", lwd = 2)
       lines(0:1, 0:1, col = "black", lty = 2)
-      
-      # Calcul du RMSE
-      # rmse <- sqrt(mean((as.numeric(covs_pred[[j]]) - as.numeric(covs_og))^2))
       
       # Calcul du FNR / FPR 
       FNR <- conf.matrix$table[2, 1] / sum(conf.matrix$table[2, ], na.rm = TRUE)
       FPR <- conf.matrix$table[1, 2] / sum(conf.matrix$table[1, ], na.rm = TRUE)
       
       # Aggrégation des évaluations pour chaque méthode, de chaque jeu de données
-      eval[[j]] <- list(Accuracy = round(conf.matrix$overall['Accuracy'], 3),
-                        F1score = round(conf.matrix$byClass['F1'], 3),
+      eval[[j]] <- list(F1score = round(conf.matrix$byClass['F1'], 3),
                         FNR = round(FNR,3),
                         FPR = round(FPR,3),
                         AUC = round(conf.matrix$byClass['Balanced Accuracy'], 3))
     }
     
     # Aggrégation des évaluations des 4 méthodes dans un tableau
-    tab_evals <- data.frame(matrix(nrow = 4, ncol = 5))
+    tab_evals <- data.frame(matrix(nrow = 4, ncol = 4))
     rownames(tab_evals) <- c("STEPAIC", "LASSO", "SCAD", "MCP")
-    colnames(tab_evals) <- c("Accuracy", "F1score", "FNR", "FPR", "AUC")
+    colnames(tab_evals) <- c("F1score", "FNR", "FPR", "AUC")
     for (j in seq_along(eval)) {
       tab_evals[j, ] <- unlist(eval[[j]])
     }
@@ -114,31 +111,25 @@ Evaluation <- function(simulation) {
 }
 
 
-# Exemple 
+
+# Variables 
 covariables <- c(100,200,500,1000)
 simulation <- Simulation(100, covariables, 20, 100)
 evaluation <- Evaluation(simulation)
-
+evaluation$evaluations
 
 # Tableaux des résultats
-library(dplyr)
-library(knitr)
-library(kableExtra)
-
 eval <- evaluation$evaluations
 nb_covs <- as.character(attributes(eval)$nb_variables)
+tableau <- rbind(eval$'100', eval$'200', eval$'500', eval$'1000')
 
-eval %>%
-  kable('latex', booktabs = T, caption = 'Évaluations des méthodes stepAIC, Lasso, SCAD et MCP') %>% 
+tableau %>%
+  kable('latex', booktabs = T, caption = 'Évaluations des méthodes stepAIC, Lasso, SCAD et MCP pour 100 réplicas') %>% 
   kable_styling(latex_options = c("striped", "hold_position")) %>%
-  pack_rows("50 covariables", 1, 4) %>%
-  pack_rows("100 covariables", 5, 8)
+  pack_rows("100 covariables", 1, 4) %>%
+  pack_rows("200 covariables", 5, 8) %>% 
+  pack_rows("500 covariables", 9, 12) %>% 
+  pack_rows("1000 covariables", 13, 16) %>% 
+  save_kable(file = "tableau_simulations.tex")
 
-# print(kable(eval, align = 'c') %>%
-#   kable_styling(full_width = FALSE) %>%
-#   add_header_above(c(" " = 1, '100 covariables' = 5)))
-# 
-# kable(eval, align = 'c', format = 'latex') %>%
-#   kable_styling(full_width = FALSE) %>%
-#   add_header_above(c(" " = 1, '100 covariables' = 5)) %>% 
-#   save_kable(paste("tableau",nb_covs,'.tex', sep = ""))
+
