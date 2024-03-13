@@ -76,13 +76,12 @@ Methodes2 <- function(xdata, ydata, folds = 5) {
   
   res <- numeric(ncol(xdata))
   N <- nrow(xdata)
-  for (i in 1:100) {
+  for (i in 1:1000) {
     id <- sample(1:N, round(N/2))
     x <- xdata[id,]
     y <- ydata[id]
     
     # LASSO
-    x_scale <- scale(x)
     fit <- glmnet(xdata_scale, ydata, alpha = 1, lambda = lambda_lasso) 
     ß_lasso <- coef(fit, s = lambda_lasso)
     covs_lasso <- ifelse(ß_lasso[-1]!=is.na(ß_lasso[-1]) & ß_lasso[-1]!=0, 1, 0)
@@ -123,25 +122,12 @@ Methodes2 <- function(xdata, ydata, folds = 5) {
     resultat[[i]] <- select_covs
   }
   
-  resultat <- list(STEPAIC = resultat[[1]],
-                   LASSO = resultat[[2]],
-                   SCAD = resultat[[3]],
-                   MCP = resultat[[4]])
-  
-  nb_covs <- list(STEPAIC = sum(resultat[[1]]!=0),
-                  LASSO = sum(resultat[[2]]!=0),
-                  SCAD = sum(resultat[[3]]!=0),
-                  MCP = sum(resultat[[4]]!=0))
-  
-  which_covs <- list(STEPAIC = which(resultat[[1]]!=0),
-                     LASSO = which(resultat[[2]]!=0),
-                     SCAD = which(resultat[[3]]!=0),
-                     MCP = which(resultat[[4]]!=0))
-  
-  resultats <- list(resultats_tot = resultat, 
-                    resultats_nb = nb_covs, 
-                    resultats_covs = which_covs)
+  resultats <- rbind(resultat[[1]], 
+                     resultat[[2]], 
+                     resultat[[3]], 
+                     resultat[[4]])
   
   return(resultats)
 }
+
 

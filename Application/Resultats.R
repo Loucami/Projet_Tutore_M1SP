@@ -29,9 +29,31 @@ Resultats1 <- function(xdata, ydata) {
 
 Resultats2 <- function(xdata, ydata) {
   
+  res <- Methodes2(xdata, ydata)
+  
+  nb_covs <- list(STEPAIC = sum(res[1,]),
+                  LASSO = sum(res[2,]),
+                  SCAD = sum(res[3,]),
+                  MCP = sum(res[4,]))
+  
+  which_covs <- list(STEPAIC = which(res[1,]!=0),
+                     LASSO = which(res[2,]!=0),
+                     SCAD = which(res[3,]!=0),
+                     MCP = which(res[4,]!=0))
+  
+  resultats <- list(resultats_tot = res, 
+                    resultats_nb = nb_covs, 
+                    resultats_covs = which_covs)
+  
+  return(resultats)
+}
+
+
+Resultats3 <- function(xdata, ydata) {
+  
   res <- numeric(ncol(xdata))
   N <- nrow(xdata)
-  for (i in 1:100) {
+  for (i in 1:15) {
     id <- sample(1:N, round(N/2))
     x <- xdata[id,]
     y <- ydata[id]

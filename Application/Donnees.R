@@ -23,17 +23,13 @@ xdata <- as.matrix(xdata)
 ydata <- sp.df %>% filter(sp.df$id %in% id_commun$id) 
 ydata <- ydata$theta
 
-resultats1 <- Resultats1(xdata[,1:100],ydata)
-resultats1$resultats_nb
+# Sans stability selection
+# resultats1 <- Resultats1(xdata,ydata)
+# resultats1$resultats_nb
 
-resultats2 <- Resultats2(xdata[,1:100],ydata)
+# Avec stability selection
+resultats2 <- Resultats2(xdata,ydata)
 resultats2$resultats_nb
-
-resultats3 <- Methodes2(xdata[,1:100], ydata)
-resultats3$resultats_nb
-
-
-
 
 # SHARP : Stability selection pour Lasso
 library(sharp)

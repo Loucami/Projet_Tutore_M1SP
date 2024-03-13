@@ -1,4 +1,5 @@
 
+
 library(dplyr)
 
 
@@ -76,3 +77,4 @@ curve(lasso_seuil(x, lambda), col = 'red', add = TRUE)
 curve(scad_seuil(x), col = 'blue', add = TRUE)
 curve(mcp_seuil(x), col = 'darkgreen', add = TRUE)
 legend("bottomright", legend = c("Lasso", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
+

@@ -12,6 +12,8 @@ library(splus2R)
 # Packages Evaluation
 library(caret)
 library(ROCR)
+# Package Tableau 
+library(kableExtra)
 
 
 
@@ -31,7 +33,7 @@ Evaluation <- function(simulation) {
     for (r in seq_along(simulation[[s]])) {
       xdata <- simulation[[s]][[r]]$X
       ydata <- simulation[[s]][[r]]$Y
-      covs <- methode_select(xdata, ydata, 5)
+      covs <- Methodes2(xdata, ydata, 5)
       res <- rbind(res, covs)
     }
     res <- res[-1,] # Je supprime la première ligne nulle
@@ -111,7 +113,6 @@ Evaluation <- function(simulation) {
 }
 
 
-
 # Variables 
 covariables <- c(100,200,500,1000)
 simulation <- Simulation(100, covariables, 20, 100)
@@ -125,7 +126,7 @@ tableau <- rbind(eval$'100', eval$'200', eval$'500', eval$'1000')
 
 tableau %>%
   kable('latex', booktabs = T, caption = 'Évaluations des méthodes stepAIC, Lasso, SCAD et MCP pour 100 réplicas') %>% 
-  kable_styling(latex_options = c("striped", "hold_position")) %>%
+  kable_styling(latex_options = c("striped", "hold_position")) %>% 
   pack_rows("100 covariables", 1, 4) %>%
   pack_rows("200 covariables", 5, 8) %>% 
   pack_rows("500 covariables", 9, 12) %>% 
