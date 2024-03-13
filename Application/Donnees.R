@@ -32,6 +32,6 @@ resultats2 <- Resultats2(xdata,ydata)
 resultats2$resultats_nb
 
 # SHARP : Stability selection pour Lasso
-library(sharp)
-lasso <- VariableSelection(xdata[,1:500],ydata)
-sum(SelectedVariables(lasso))
+# library(sharp)
+# lasso <- VariableSelection(xdata[,1:500],ydata)
+# sum(SelectedVariables(lasso))
