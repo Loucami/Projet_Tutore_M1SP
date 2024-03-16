@@ -7,7 +7,9 @@ Ici sont présents les codes permettant la simluation de jeux de données fictif
 
 Reprend la fonction de sélection de covariables (*Methodes.R*) présente dans la section **Méthodes** et la modifie légèrement, de façon à ressortir une matrice binaire avec en ligne les quatre méthodes de sélection (LASSO, SCAD, MCP, STEPAIC), en colonne les covariables, et des 1 au niveau des covariables sélectionnées. 
 
-
+ + La fonction Methode2() améliore la fonction Methode1() en ajoutant de la *stability selection*.  
+ 
+ 
 ## Simulation.R
 
 Simule la création d'un jeu de données en fonction de paramètres prédéfinis. 
@@ -26,12 +28,12 @@ Le nombre de covariables peut également être un vecteur contenant plusieurs va
 
 ## Evaluation.R
 
-À partir d'une simulation, la fonction applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet. Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment le *F1Score*, le *FNR*, le *FPR*, et le *AUC*.
+À partir d'une simulation, la fonction applique à chaque réplica de chaque jeu de données les quatre méthodes de sélections de covariables utilisées dans ce projet (avec *stability selection*). Elle calcule ensuite pour chaque jeu de données et pour chaque méthode un vecteur moyen des covariables sélectionnées, et le nombre moyen de covariables sélectionnées. Enfin, à partir de ces informations elle évalue les quatre méthodes sur chaque jeu de données, en utilisant notamment le *F1Score*, le *FNR*, le *FPR*, et le *AUC*.
 
 
-## Tableau_simulation.tex
+## evaluation.RData
 
-Fichier Latex contenant les résutlats d'évaluations des quatre méthodes, pour des jeux de données disposant de 20 covariables d'intérêts ainsi que 100, 200, 500 et 1000 covariables totales. 
+Fichier Latex contenant les résutlats d'évaluations des quatre méthodes, pour des jeux de données disposant de 20 covariables d'intérêts ainsi que 100, 200, 500 et 1000 covariables au total. 
 
 
 ## ROC_100
