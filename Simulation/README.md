@@ -7,7 +7,7 @@ Ici sont présents les codes permettant la simluation de jeux de données fictif
 
 Reprend la fonction de sélection de covariables présente dans la section **Méthodes** et la modifie légèrement, de façon à ressortir une matrice binaire avec en ligne les quatre méthodes de sélection (LASSO, SCAD, MCP, STEPAIC), en colonne les covariables, et des 1 au niveau des covariables sélectionnées. 
 
-Contient 2 fonctions, où *Methode2()* améliore la fonction *Methode1()* en ajoutant de la *stability selection*.  
+Méthodes.R contient 2 fonctions, où *Methode2()* améliore la fonction *Methode1()* en ajoutant de la *stability selection*.  
  
  
 ## Simulation.R
