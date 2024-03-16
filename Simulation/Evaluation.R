@@ -120,7 +120,6 @@ Evaluation <- function(simulation) {
 covariables <- c(100,200,500,1000)
 simulation <- Simulation(100, covariables, 20, 100)
 evaluation <- Evaluation(simulation)
-evaluation$evaluations
 
 # Tableaux des résultats
 eval <- evaluation$evaluations
