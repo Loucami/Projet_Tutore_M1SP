@@ -7,7 +7,7 @@ Ici sont présents les codes permettant la simluation de jeux de données fictif
 
 Reprend la fonction de sélection de covariables présente dans la section **Méthodes** et la modifie légèrement, de façon à ressortir une matrice binaire avec en ligne les quatre méthodes de sélection (LASSO, SCAD, MCP, STEPAIC), en colonne les covariables, et des 1 au niveau des covariables sélectionnées. 
 
-Méthodes.R contient 2 fonctions, où *Methode2()* améliore la fonction *Methode1()* en ajoutant de la *stability selection*.  
+Methodes.R contient 2 fonctions, où *Methode2()* améliore la fonction *Methode1()* en ajoutant de la *stability selection*.  
  
  
 ## Simulation.R
@@ -33,7 +33,7 @@ Le nombre de covariables peut également être un vecteur contenant plusieurs va
 
 ## evaluation.RData
 
-Fichier .RData contenant les résutlats d'évaluations des quatre méthodes, pour des jeux de données disposant de 20 covariables d'intérêts ainsi que 100, 200, 500 et 1000 covariables au total. 
+Fichier .RData contenant les résultats d'évaluations des quatre méthodes, pour des jeux de données disposant de 20 covariables d'intérêts ainsi que 100, 200, 500 et 1000 covariables au total. 
 
 
 ## ROC100
