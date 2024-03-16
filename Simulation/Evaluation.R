@@ -4,8 +4,11 @@ source("Simulation/Simulation.R")
 
 # Package Méthodes
 library(glmnet) 
+library(glmnetUtils)
 library(ncvreg)
 library(MASS)
+library(foreach)
+doParallel::registerDoParallel(cluster <- parallel::makeCluster(parallel::detectCores()-5))
 # Packages Simulation
 library(mvtnorm)
 library(splus2R)
@@ -132,5 +135,4 @@ tableau %>%
   pack_rows("500 covariables", 9, 12) %>% 
   pack_rows("1000 covariables", 13, 16) %>% 
   save_kable(file = "tableau_simulations.tex")
-
 
