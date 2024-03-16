@@ -13,8 +13,8 @@ Explique en détail la composition des données réelles *(Donnees.RData)*.
 
 ## Methodes.R
 
-Reprend la Methode2() utilisée sur les simulations, en ne gardant que les méthodes LASSO, SCAD et MCP. 
+Reprend la Methode2() (avec *stability selection*) utilisée sur les simulations, en ne gardant que les méthodes LASSO, SCAD et MCP. 
 
 ## Resultats.R
 
-Applique les 3 méthodes de sélections de covariables (avec *stability selection*) aux données réelles.
+Applique les 3 méthodes de sélections de covariables aux données réelles.
