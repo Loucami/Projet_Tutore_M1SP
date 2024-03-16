@@ -12,3 +12,5 @@ Contient tout les codes utilisés pour mettre en place les 4 méthodes de sélec
 ## Simulation
 Contient des codes de simulations de données fictives, sur lesquels sont ensuite appliquées nos quatre méthodes de sélections. 
 
+## Application 
+Contient les données réelles utilisées dans ce projet (Fièvre Jaune), ainsi que les codes utilisés afin d'appliquer les méthodes de sélections de covariables. 
