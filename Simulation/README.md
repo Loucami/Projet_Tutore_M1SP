@@ -1,6 +1,6 @@
 # Simulation
 
-Ici sont présents les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de régréssions sont ensuite appliquées, puis évaluer.
+Contient les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de sélection de covariables sont ensuite appliquées, puis évaluées.
 
 
 ## Methodes.R

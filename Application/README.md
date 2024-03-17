@@ -1,11 +1,11 @@
 
 # Application
 
-Dans ce dossier se trouve les codes utilisés afin d'appliquer les méthodes LASSO, SCAD et MCP à des données réelles relatives au vaccin de la fièvre jaune. 
+Dans ce dossier se trouve les codes utilisés afin d'appliquer les méthodes LASSO, SCAD et MCP à des données réelles relatives au vaccin contre la fièvre jaune. 
 
 ## Donnes.RData
 
-Fichier contenant les données relatives au vaccin contre la fièvre jaune. Il comprend, pour 71 individus, le taux d'anticorps produit en réponse au vaccin ainsi que l'expression de 10086 gènes. Plus de détails dans *Explication.Rmd*.
+Fichier contenant les données relatives au vaccin YF17D contre la fièvre jaune. Il comprend, pour 96 individus, le taux d'anticorps produit en réponse au vaccin ainsi que l'expression de 10086 gènes. Plus de détails dans *Explication.Rmd*.
 
 ## Explication.Rmd
 
