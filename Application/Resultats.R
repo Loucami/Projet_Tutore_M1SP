@@ -1,5 +1,5 @@
 
-load('Application/Donnees.RData')
+load('Application/data.RData')
 source('Application/Methodes.R')
 library(dplyr)
 library(glmnet) 
@@ -15,7 +15,7 @@ sum(which(is.na(gene_expression)))
 sum(which(is.na(sp.df)))
 
 
-# Individus => 71 en commmun 
+# Individus => 96 en commmun 
 d1 <- as.data.frame(rownames(gene_expression))
 colnames(d1) <- 'id'
 d2 <- sp.df['id']
@@ -36,7 +36,7 @@ ydata <- ydata$theta
 # Résultats
 resultats <- Methodes(xdata,ydata)
 resultats$resultats_covs
-# => GAPDH
+
 
 # SHARP : Stability selection pour Lasso
 # library(sharp)

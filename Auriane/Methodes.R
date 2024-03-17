@@ -115,14 +115,14 @@ Methodes2 <- function(xdata, ydata, folds = 5) {
     i_grp <- seq(i, nb_lignes, by = 4)
     moy_covs <- colMeans(res[i_grp,])
     select_covs <- ifelse(moy_covs > 0.8, 1, 0)
-    resultat[[i]] <- select_covs
+    resultat[[i]] <- moy_covs
   }
-
+  
   resultats <- rbind(resultat[[1]],
                      resultat[[2]],
                      resultat[[3]],
                      resultat[[4]])
-
+  
   return(resultats)
 }
 

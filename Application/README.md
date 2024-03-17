@@ -5,7 +5,7 @@ Dans ce dossier se trouve les codes utilisés afin d'appliquer les méthodes LAS
 
 ## Donnes.RData
 
-Fichier contenant les données relatives au vaccin contre la fièvre jaune. Il comprend, pour 71 individus, le taux d'anticorps produit en réponse au vaccin ainsi que l'expression de 10086 gènes. Plus de détails dans *Explication.Rmd*
+Fichier contenant les données relatives au vaccin contre la fièvre jaune. Il comprend, pour 71 individus, le taux d'anticorps produit en réponse au vaccin ainsi que l'expression de 10086 gènes. Plus de détails dans *Explication.Rmd*.
 
 ## Explication.Rmd
 

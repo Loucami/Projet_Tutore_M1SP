@@ -1,6 +1,6 @@
 library(dplyr)
 library(foreach)
-load('Auriane/Donnees.RData')
+load('Auriane/data.RData')
 source('Auriane/Resultats.R')
 
 doParallel::registerDoParallel(cluster <- parallel::makeCluster(parallel::detectCores()-5))
@@ -10,7 +10,7 @@ doParallel::registerDoParallel(cluster <- parallel::makeCluster(parallel::detect
 sum(which(is.na(gene_expression)))
 sum(which(is.na(sp.df)))
 
-# Individus => 71 en commmun
+# Individus => 96 en commmun
 d1 <- as.data.frame(rownames(gene_expression))
 colnames(d1) <- 'id'
 d2 <- sp.df['id']

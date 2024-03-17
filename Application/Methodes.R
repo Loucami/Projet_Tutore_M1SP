@@ -47,7 +47,7 @@ Methodes <- function(xdata, ydata, folds = 5) {
   for (i in 1:3) {
     i_grp <- seq(i, nb_lignes, by = 3)
     moy_covs <- colMeans(res[i_grp,])
-    select_covs <- ifelse(moy_covs > 0.8, 1, 0)
+    select_covs <- ifelse(moy_covs > 0.2, 1, 0)
     res_methodes[[i]] <- select_covs
   }
   
@@ -63,7 +63,8 @@ Methodes <- function(xdata, ydata, folds = 5) {
                      SCAD = which(resultat[2,]!=0),
                      MCP = which(resultat[3,]!=0))
   
-  resultats <- list(resultats_nb = nb_covs, 
+  resultats <- list(resultats_tot = resultat,
+                    resultats_nb = nb_covs, 
                     resultats_covs = which_covs)
   
   return(resultats)
