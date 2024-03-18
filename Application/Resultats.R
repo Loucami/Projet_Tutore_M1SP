@@ -2,6 +2,7 @@
 load('Application/data.RData')
 source('Application/Methodes.R')
 library(dplyr)
+library(kableExtra)
 library(glmnet) 
 library(glmnetUtils)
 library(ncvreg)
@@ -34,9 +35,24 @@ ydata <- ydata$theta
 
 
 # Résultats
-resultats <- Methodes(xdata,ydata)
-resultats$resultats_covs
+res <- Methodes(xdata,ydata)
+res$resultats_covs
+res$resultats_frq[,6163]
+res$resultats_frq[,4339]
+#save(resultats, file = 'Application/resultats.RData')
 
+
+# Tableaux
+load('Application/resultats.RData')
+tableau <- cbind(resultats$resultats_frq[,6163], resultats$resultats_frq[,4339])
+colnames(tableau) <- c('PAX6', 'JPH3')
+rownames(tableau) <- c('LASSO', 'SCAD', 'MCP')
+
+tableau %>% 
+  kable('latex', booktabs = T, caption = 'Titre') %>% 
+  kable_styling(latex_options = c("striped", "hold_position")) %>% 
+  add_header_above(c(" " = 1, "Gènes sélectionnés" = 2)) %>% 
+  pack_rows("Méthodes", 1, 3) #%>% save_kable(file = "tableau_simulations.tex")
 
 # SHARP : Stability selection pour Lasso
 # library(sharp)

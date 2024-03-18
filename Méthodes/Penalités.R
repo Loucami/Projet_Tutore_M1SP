@@ -25,7 +25,7 @@ scad_penalty <- function(beta, lambda, alpha) {
 curve(lasso_penalty(x,lambda), from = -4, to = 4, col = 'red', xlab = 'ß', ylab = 'p(ß)')
 curve(scad_penalty(x, lambda, alpha), from = -4, to = 4, col = 'blue', add = TRUE)
 curve(mcp_penalty(x,lambda, alpha), from = -4, to = 4, col = 'darkgreen', add = TRUE)
-legend("topright", legend = c("Lasso", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
+legend("topright", legend = c("LASSO", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
 
 # Graphique 2 : Dérivée de la pénalité (= évolution de la pénalité)
 lasso_derivative <- function(beta, lambda) {
@@ -44,7 +44,7 @@ mcp_derivative <- function(beta, lambda, alpha) {
 curve(lasso_derivative(x,lambda), from = 0.0001, to = 4, col = 'red', xlab = 'ß', ylab = "p'(ß)", ylim = c(0:1))
 curve(scad_derivative(x, lambda, alpha), from = 0.0001, to = 4, col = 'blue', add = TRUE)
 curve(mcp_derivative(x,lambda, alpha), from = 0.0001, to = 4, col = 'darkgreen', add = TRUE)
-legend("topright", legend = c("Lasso", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
+legend("topright", legend = c("LASSO", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
 
 # Graphique 3 : ß ajustés, en fonction du ß initiale (= fonction inverse de la pénalité)
 lasso_seuil <- function(beta, lambda) {
@@ -76,5 +76,5 @@ lines(values, values, col = "black", lty = 2)  # Ajouter la ligne en pointillés
 curve(lasso_seuil(x, lambda), col = 'red', add = TRUE)
 curve(scad_seuil(x), col = 'blue', add = TRUE)
 curve(mcp_seuil(x), col = 'darkgreen', add = TRUE)
-legend("bottomright", legend = c("Lasso", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
+legend("bottomright", legend = c("LASSO", "SCAD", "MCP"), col = c("red", "blue", "darkgreen"), lty = 1)
 

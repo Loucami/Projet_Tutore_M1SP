@@ -43,17 +43,23 @@ Methodes <- function(xdata, ydata, folds = 5) {
 
   # Sélection unique de covariables pour LASSO, SCAD, MCP
   res_methodes <- list()
+  res_methodes_frq <- list()
   nb_lignes <- nrow(res)
   for (i in 1:3) {
     i_grp <- seq(i, nb_lignes, by = 3)
     moy_covs <- colMeans(res[i_grp,])
-    select_covs <- ifelse(moy_covs > 0.2, 1, 0)
+    res_methodes_frq[[i]] <- moy_covs
+    select_covs <- ifelse(moy_covs > 0.15, 1, 0)
     res_methodes[[i]] <- select_covs
   }
   
   resultat <- rbind(res_methodes[[1]], 
                      res_methodes[[2]], 
                      res_methodes[[3]])
+  
+  resultat_frq <- rbind(res_methodes_frq[[1]], 
+                        res_methodes_frq[[2]], 
+                        res_methodes_frq[[3]])
   
   nb_covs <- list(LASSO = sum(resultat[1,]),
                   SCAD = sum(resultat[2,]),
@@ -64,6 +70,7 @@ Methodes <- function(xdata, ydata, folds = 5) {
                      MCP = which(resultat[3,]!=0))
   
   resultats <- list(resultats_tot = resultat,
+                    resultats_frq = resultat_frq,
                     resultats_nb = nb_covs, 
                     resultats_covs = which_covs)
   
