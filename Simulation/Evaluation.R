@@ -135,3 +135,4 @@ tableau %>%
   pack_rows("1000 covariables", 13, 16) %>% 
   save_kable(file = "tableau_simulations.tex")
 
+
