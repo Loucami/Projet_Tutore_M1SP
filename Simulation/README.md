@@ -1,6 +1,6 @@
 # Simulation
 
-Contient les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de sélection de covariables sont ensuite appliquées, puis évaluées.
+Ce fichier contient les codes permettant la simluation de jeux de données fictifs, sur lesquels des méthodes de sélection de covariables sont ensuite appliquées, puis évaluées.
 
 
 ## Methodes.R
