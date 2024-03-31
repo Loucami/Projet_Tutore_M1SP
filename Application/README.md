@@ -1,7 +1,7 @@
 
 # Application
 
-Dans ce dossier se trouve les codes utilisés afin d'appliquer les méthodes LASSO, SCAD et MCP à des données réelles relatives au vaccin contre la fièvre jaune. 
+Ce dossier contient les codes utilisés afin d'appliquer les méthodes LASSO, SCAD et MCP à des données réelles relatives au vaccin contre la fièvre jaune. 
 
 ## Donnes.RData
 

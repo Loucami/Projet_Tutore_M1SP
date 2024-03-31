@@ -136,3 +136,27 @@ tableau %>%
   save_kable(file = "tableau_simulations.tex")
 
 
+# Intervalles de confiance à 95%
+load('Simulation/evaluation.RData')
+IC <- list()
+k=1
+for (eval in evaluation$evaluations) {
+  eval <- cbind(eval$F1score, eval$FPR)
+  eval <- eval[-1,]
+  ic <- data.frame()
+  for (i in 1:2){
+    for (j in 1:3){
+      inf <- round(eval[j,i] - 1.96 * sqrt(eval[j,i] * (1 - eval[j,i]) / 100),3)
+      sup <- round(eval[j,i] + 1.96 * sqrt(eval[j,i] * (1 - eval[j,i]) / 100),3)
+      ic[j,i] <- paste(inf, sup, sep = '-')
+    }
+  }
+  rownames(ic) <- c("LASSO", "SCAD", "MCP")
+  colnames(ic) <- c("F1Score", "FPR")
+  IC[[k]] <- ic
+  k=k+1
+}
+IC
+
+
+
