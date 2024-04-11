@@ -1,4 +1,4 @@
-# Projet_Tutore_M1SP
+# Projet Tutoré M1SP
 
 *Projet Tutoré - Master 1 Santé Publique 2023/2024*
 
